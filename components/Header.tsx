@@ -2,27 +2,45 @@
 import { useState } from 'react'
 import { ShoppingCart, Menu, X } from 'lucide-react'
 import { useCart } from '@/lib/cart'
+import { usePathname, useRouter } from 'next/navigation'
 
 export default function Header({ onOpenCart }: { onOpenCart?: () => void }) {
   const [open, setOpen] = useState(false)
   const count = useCart(s => s.items.reduce((n, i) => n + i.qty, 0))
-  const openCart = onOpenCart ?? (() => {}) // no-op if not provided
+  const openCart = onOpenCart ?? (() => {})
+  const pathname = usePathname()
+  const router = useRouter()
 
   const goContact = (e: React.MouseEvent) => {
     e.preventDefault()
     setOpen(false)
-    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+
+    // If we're already on the home page, smooth-scroll.
+    if (pathname === '/' || pathname === '') {
+      const el = document.getElementById('contact')
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      return
+    }
+
+    // Otherwise navigate to the home page's #contact.
+    router.push('/#contact')
   }
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b border-neutral-200">
       <div className="mx-auto max-w-6xl px-4 h-16 flex items-center justify-between">
-        <a href="/" className="font-semibold text-lg tracking-tight">Tom Brown</a>
+        <a href="/" className="font-semibold text-lg tracking-tight">ShopName</a>
 
         {/* Desktop nav */}
         <nav className="hidden sm:flex items-center gap-6">
           <a href="/profile" className="text-sm text-neutral-700 hover:text-black">Profile</a>
-          <a href="#contact" onClick={goContact} className="text-sm text-neutral-700 hover:text-black">Contact</a>
+          <a
+            href="/#contact"
+            onClick={goContact}
+            className="text-sm text-neutral-700 hover:text-black"
+          >
+            Contact
+          </a>
 
           <button
             onClick={openCart}
@@ -49,12 +67,26 @@ export default function Header({ onOpenCart }: { onOpenCart?: () => void }) {
         </button>
       </div>
 
-      {/* Mobile sheet */}
+      {/* Mobile sheet (overlay; doesn’t push page) */}
       {open && (
         <div className="sm:hidden absolute inset-x-0 top-16 z-50 mx-4 rounded-2xl border bg-white shadow-lg">
           <div className="p-3 flex flex-col">
-            <a href="/profile" className="px-3 py-2 rounded-lg hover:bg-neutral-50" onClick={() => setOpen(false)}>Profile</a>
-            <a href="#contact" className="px-3 py-2 rounded-lg hover:bg-neutral-50" onClick={goContact}>Contact</a>
+            <a
+              href="/profile"
+              className="px-3 py-2 rounded-lg hover:bg-neutral-50"
+              onClick={() => setOpen(false)}
+            >
+              Profile
+            </a>
+
+            <a
+              href="/#contact"
+              className="px-3 py-2 rounded-lg hover:bg-neutral-50"
+              onClick={goContact}
+            >
+              Contact
+            </a>
+
             <button
               onClick={() => { setOpen(false); openCart() }}
               className="mt-2 inline-flex items-center gap-2 rounded-lg border px-3 py-2 hover:bg-neutral-50"
