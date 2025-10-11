@@ -1,19 +1,26 @@
-# dependencies
+# Node
 node_modules/
 .pnpm-store/
-
-# next build
-.next/
-out/
-dist/
-.cache/
-
-# env & tooling
-.env*
-.vercel/
-.DS_Store
-
-# logs
 npm-debug.log*
 yarn-debug.log*
-pnpm-debug.log*
+yarn-error.log*
+
+# Next.js
+.next/
+out/
+.vercel/
+.turbo/
+.next-turbo/
+.swc/
+dist/
+build/
+
+# Env & OS
+.env*
+!.env.example
+.DS_Store
+.idea/
+.vscode/
+
+# Tests & coverage
+coverage/
