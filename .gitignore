@@ -1,0 +1,19 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# next build
+.next/
+out/
+dist/
+.cache/
+
+# env & tooling
+.env*
+.vercel/
+.DS_Store
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
