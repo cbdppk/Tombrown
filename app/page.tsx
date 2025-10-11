@@ -22,7 +22,7 @@ export default function Page() {
     if (raw) { try { setProducts(JSON.parse(raw)) } catch {} }
   }, [])
 
-  // Cart modal
+  // Cart modal state (single source of truth)
   const [cartOpen, setCartOpen] = useState(false)
 
   // Contact form state + WA validation
@@ -66,8 +66,8 @@ export default function Page() {
             alt="Tom Brown hero"
             className="absolute inset-0 h-full w-full object-cover z-0"
             srcs={[
-              v('/images/hero.jpg'),   // ← prefer your local hero (cache-busted)
-              heroPrimary,             // then product-provided (if valid)
+              v('/images/hero.jpg'),   // cache-busted local image
+              heroPrimary,             // product-provided (if valid)
               v('/images/hero.png'),
               v('/images/hero.webp'),
               '/hero.jpg',
@@ -165,8 +165,8 @@ export default function Page() {
 
       <Footer />
 
-      {/* Floating cart with live count (opens right-slide cart) */}
-      <FloatingCartButton />
+      {/* Floating cart opens the same modal state */}
+      <FloatingCartButton onOpenCart={() => setCartOpen(true)} />
 
       {/* Right-slide Cart modal */}
       <CartModal open={cartOpen} onClose={() => setCartOpen(false)} phone={cfg.phone} storeName={cfg.displayName} />
