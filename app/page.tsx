@@ -5,10 +5,11 @@ import Footer from '@/components/Footer'
 import CartModal from '@/components/CartModal'
 import ProductCard from '@/components/ProductCard'
 import SafeImage from '@/components/SafeImage'
+import FloatingCartButton from '@/components/FloatingCartButton'
 import { PRODUCTS as DEFAULTS } from '@/lib/products'
 import { SHOP_CONFIG } from '@/lib/shopConfig'
 import type { Product } from '@/lib/types'
-import { ShoppingCart } from 'lucide-react'
+import { v } from '@/lib/assets'
 
 export default function Page() {
   const [products, setProducts] = useState<Product[]>(DEFAULTS)
@@ -44,21 +45,31 @@ export default function Page() {
 
   const heroPrimary = (p?.images?.[0] && (/^https?:\/\//.test(p.images[0]) || p.images[0].startsWith('/'))) ? p.images[0] : undefined
 
+  // ensure hash #contact scrolls after navigation
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.hash === '#contact') {
+      const t = setTimeout(() => {
+        document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }, 50)
+      return () => clearTimeout(t)
+    }
+  }, [])
+
   return (
     <main className="min-h-screen bg-surface scroll-smooth">
       <Header onOpenCart={() => setCartOpen(true)} />
 
-      {/* HERO — image + strong overlay + centered copy + bottom chips (inside hero) */}
+      {/* HERO */}
       <section className="relative">
         <div className="relative h-[74vh] min-h-[520px] md:h-[90vh] w-full overflow-hidden">
           <SafeImage
             alt="Tom Brown hero"
             className="absolute inset-0 h-full w-full object-cover z-0"
             srcs={[
-              '/images/hero.jpg',   // prefer your local hero
-              heroPrimary,          // then product-provided image (if valid)
-              '/images/hero.png',
-              '/images/hero.webp',
+              v('/images/hero.jpg'),   // ← prefer your local hero (cache-busted)
+              heroPrimary,             // then product-provided (if valid)
+              v('/images/hero.png'),
+              v('/images/hero.webp'),
               '/hero.jpg',
             ]}
           />
@@ -80,7 +91,7 @@ export default function Page() {
             </div>
           </div>
 
-          {/* Benefit chips inside hero (don’t push layout) */}
+          {/* chips inside hero */}
           <div className="pointer-events-none absolute inset-x-0 bottom-4 z-20">
             <div className="pointer-events-auto mx-auto flex max-w-6xl flex-col gap-3 px-4 sm:flex-row">
               <div className="flex-1 rounded-2xl bg-white/95 px-4 py-3 text-sm shadow-soft ring-1 ring-black/5">✅ Hygienic small-batch roasting</div>
@@ -96,7 +107,7 @@ export default function Page() {
         <div className="flex justify-center">{p && <ProductCard p={p} />}</div>
       </section>
 
-      {/* HOW TO PREPARE — thicker spacing + correct measurements */}
+      {/* HOW TO PREPARE */}
       <section className="mx-auto max-w-6xl px-4 pt-12 md:pt-16 pb-20 md:pb-28">
         <h3 className="text-xl font-semibold mb-4">How to prepare</h3>
         <div className="grid gap-4 md:grid-cols-3">
@@ -121,7 +132,7 @@ export default function Page() {
         </div>
       </section>
 
-      {/* CONTACT — thicker spacing + alert if not filled */}
+      {/* CONTACT */}
       <section id="contact" className="scroll-mt-28 mx-auto max-w-6xl px-4 pt-12 md:pt-16 pb-24 md:pb-32">
         <div className="grid gap-8 md:grid-cols-2">
           <div className="rounded-2xl bg-white p-6 shadow-soft ring-1 ring-black/5">
@@ -154,17 +165,10 @@ export default function Page() {
 
       <Footer />
 
-      {/* Floating cart button (bottom-right) */}
-      <button
-        onClick={() => setCartOpen(true)}
-        className="fixed bottom-4 right-4 z-[60] inline-flex items-center gap-2 rounded-full bg-black text-white px-5 py-3 shadow-lg hover:bg-neutral-800"
-        aria-label="Open cart"
-      >
-        <ShoppingCart className="h-5 w-5" />
-        <span>Cart</span>
-      </button>
+      {/* Floating cart with live count (opens right-slide cart) */}
+      <FloatingCartButton />
 
-      {/* Slide-in Cart modal (uses your existing component signature) */}
+      {/* Right-slide Cart modal */}
       <CartModal open={cartOpen} onClose={() => setCartOpen(false)} phone={cfg.phone} storeName={cfg.displayName} />
     </main>
   )

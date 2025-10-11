@@ -29,7 +29,7 @@ export default function Header({ onOpenCart }: { onOpenCart?: () => void }) {
   return (
     <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b border-neutral-200">
       <div className="mx-auto max-w-6xl px-4 h-16 flex items-center justify-between">
-        <a href="/" className="font-semibold text-lg tracking-tight">ShopName</a>
+        <a href="/" className="font-semibold text-lg tracking-tight">Tom Brown</a>
 
         {/* Desktop nav */}
         <nav className="hidden sm:flex items-center gap-6">

@@ -3,10 +3,10 @@ import type { Product } from '@/lib/types'
 import { useCart } from '@/lib/cart'
 import { money } from '@/lib/currency'
 import SafeImage from '@/components/SafeImage'
+import { v } from '@/lib/assets'
 
-const CARD_INGREDIENTS = ['Red beans', 'Soya beans', 'Groundnut', 'Maize'] // short stack for the card
+const CARD_INGREDIENTS = ['Red beans', 'Soya beans', 'Groundnut', 'Maize']
 
-// prefer absolute/URL paths; undefined otherwise
 const asPath = (s?: string) =>
   s && (/^https?:\/\//.test(s) || s.startsWith('/')) ? s : undefined
 
@@ -21,17 +21,16 @@ export default function ProductCard({ p }: { p: Product }) {
 
   return (
     <article className="w-full max-w-2xl overflow-hidden rounded-3xl bg-white shadow-soft ring-1 ring-black/5">
-      {/* Media header — no distortion */}
       <div className="relative aspect-video sm:aspect-[4/3]">
         <SafeImage
           alt={p.title}
           className="absolute inset-0 h-full w-full object-cover"
           srcs={[
-            '/images/product.jpg',             // prefer your local product image
-            asPath(p?.images?.[0]),            // then product-provided (if valid)
-            '/images/product.png',
-            '/images/product.webp',
-            '/product.jpg',                    // last-chance fallback if you drop to root
+            v('/images/product.jpg'),   // ← prefer local, cache-busted
+            asPath(p?.images?.[0]),     // fallback to product-provided if valid
+            v('/images/product.png'),
+            v('/images/product.webp'),
+            '/product.jpg',             // last-chance
           ]}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/35 to-transparent" />
@@ -43,7 +42,6 @@ export default function ProductCard({ p }: { p: Product }) {
         </div>
       </div>
 
-      {/* Body */}
       <div className="p-5">
         <p className="text-neutral-700">
           {p.description || 'Nutritious roasted cereal — smooth, rich, and satisfying.'}
