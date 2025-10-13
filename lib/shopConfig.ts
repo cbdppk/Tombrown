@@ -1,4 +1,4 @@
 export const SHOP_CONFIG = {
   displayName: 'Tom Brown',
-  phone: '233531499937'
+  phone: '233240272928'
 }
