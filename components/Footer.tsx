@@ -16,7 +16,7 @@ export default function Footer() {
         <div>
           <h4 className="font-medium">Social</h4>
           <ul className="mt-2 space-y-1 text-sm text-neutral-700">
-            <li>WhatsApp: +233 531499937</li>
+            <li>WhatsApp: +233 240272928</li>
           </ul>
         </div>
       </div>
